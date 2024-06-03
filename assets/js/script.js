@@ -8,30 +8,39 @@ document.addEventListener('DOMContentLoaded', () => {
 
   let history = JSON.parse(localStorage.getItem('weatherSearchHistory')) || [];
 
+  function showLoadingSpinner() {
+    document.getElementById('loading-spinner').classList.remove('hidden');
+  }
+
+  function hideLoadingSpinner() {
+    document.getElementById('loading-spinner').classList.add('hidden');
+  }
+
   cityForm.addEventListener('submit', async (event) => {
     event.preventDefault();
-    const city = cityInput.value.trim();
-    if (city) {
-      try {
-        await fetchWeather(city);
-      } catch (error) {
-        console.error('Error fetching weather data:', error);
-      } finally {
-        cityInput.value = '';
-      }
+    const input = cityInput.value.trim();
+    if (input) {
+        showLoadingSpinner();
+        try {
+            await fetchWeather(input);
+        } catch (error) {
+            console.error('Error fetching weather data:', error);
+        } finally {
+            cityInput.value = '';
+            hideLoadingSpinner();
+        }
     }
   });
 
-  async function fetchWeather(city) {
+  async function fetchWeather(input) {
     try {
-      const geoResponse = await fetch(`https://api.openweathermap.org/geo/1.0/direct?q=${city}&limit=1&appid=${apiKey}`);
-      const geoData = await geoResponse.json();
-      if (geoData.length === 0) {
-        alert('City not found');
+      const location = await getLocation(input);
+      if (!location) {
+        alert('Location not found');
         return;
       }
 
-      const { lat, lon, name } = geoData[0];
+      const { lat, lon, name } = location;
       const weatherResponse = await fetch(`https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&units=imperial&appid=${apiKey}`);
       const weatherData = await weatherResponse.json();
 
@@ -46,6 +55,30 @@ document.addEventListener('DOMContentLoaded', () => {
     } catch (error) {
       console.error('Error fetching weather data:', error);
     }
+  }
+
+  async function getLocation(input) {
+    let geoResponse;
+    if (/^\d{5}$/.test(input)) { // Zip code
+      geoResponse = await fetch(`https://api.openweathermap.org/geo/1.0/zip?zip=${input}&appid=${apiKey}`);
+    } else if (/^[a-zA-Z\s]+,\s*[a-zA-Z\s]+$/.test(input)) { // City, State
+      const [city, state] = input.split(',').map(s => s.trim());
+      geoResponse = await fetch(`https://api.openweathermap.org/geo/1.0/direct?q=${city},${state},US&limit=1&appid=${apiKey}`);
+    } else { // City
+      geoResponse = await fetch(`https://api.openweathermap.org/geo/1.0/direct?q=${input}&limit=1&appid=${apiKey}`);
+    }
+
+    const geoData = await geoResponse.json();
+    if (geoData.length === 0 || geoData.cod === '404') {
+      return null;
+    }
+
+    const location = geoData[0];
+    return {
+      lat: location.lat,
+      lon: location.lon,
+      name: location.name || location.zip,
+    };
   }
 
   function displayCurrentWeather(city, data) {
