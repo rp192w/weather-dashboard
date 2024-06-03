@@ -41,7 +41,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const location = await getLocation(input);
       if (!location) {
         alert('Location not found');
-        hideLoadingSpinner(); // Hide spinner if location is not found
+        hideLoadingSpinner();
         return;
       }
 
@@ -52,7 +52,7 @@ document.addEventListener('DOMContentLoaded', () => {
       displayCurrentWeather(name, weatherData);
       displayForecast(weatherData);
       
-      hideLoadingSpinner(); // Hide spinner after displaying the data
+      hideLoadingSpinner();
 
       if (!history.includes(name)) {
         history.push(name);
@@ -61,7 +61,7 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     } catch (error) {
       console.error('Error fetching weather data:', error);
-      hideLoadingSpinner(); // Hide spinner if there's an error
+      hideLoadingSpinner();
     }
   }
 
