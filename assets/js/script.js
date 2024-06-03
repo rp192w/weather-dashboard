@@ -12,10 +12,15 @@ document.addEventListener('DOMContentLoaded', () => {
       event.preventDefault();
       const city = cityInput.value.trim();
       if (city) {
-          await fetchWeather(city);
-          cityInput.value = '';
-      }
-  });
+        try {
+            await fetchWeather(city);
+        } catch (error) {
+            console.error('Error fetching weather data:', error);
+        } finally {
+            cityInput.value = '';
+        }
+    }
+});
 
   async function fetchWeather(city) {
       try {
