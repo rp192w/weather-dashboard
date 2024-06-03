@@ -24,20 +24,17 @@ h1 {
   margin: -20px -20px 20px;
 }
 
-.search-section {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+#search-section {
   margin-bottom: 20px;
 }
 
 form {
   display: flex;
-  justify-content: center;
+  align-items: center;
   margin-bottom: 20px;
 }
 
-input[type="text"] {
+#city-input {
   width: 200px;
   padding: 10px;
   border: 1px solid #ccc;
@@ -45,13 +42,24 @@ input[type="text"] {
   margin-right: 10px;
 }
 
-button {
+button[type="submit"],
+#clear-history {
   padding: 10px 20px;
   border: none;
   background-color: #007bff;
   color: #fff;
   border-radius: 4px;
   cursor: pointer;
+}
+
+#clear-history {
+  padding: 10px 20px;
+  border: none;
+  background-color: #FF0000; /* Red color */
+  color: #fff;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-left: 10px;
 }
 
 #search-history {
@@ -108,15 +116,18 @@ button {
   height: 40px;
 }
 
+.weather-card, .forecast-card {
+  margin: 2px;
+}
+
 .hidden {
   display: none;
 }
 
 #loading-spinner {
-  margin-top: 10px;
-}
-
-#loading-spinner img {
-  width: 40px; /* Adjust the size of the spinner */
-  height: 40px;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1000;
 }
