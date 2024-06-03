@@ -89,11 +89,16 @@ button[type="submit"],
 }
 
 .weather-card {
-  background-color: #007bff;
+  background-color: #4b6cb7;
   color: #fff;
   padding: 15px;
   margin-bottom: 10px;
   border-radius: 4px;
+}
+
+.weather-card img {
+  width: 100px;
+  height: 100px;
 }
 
 #forecast {
@@ -112,8 +117,8 @@ button[type="submit"],
 }
 
 .forecast-card img {
-  width: 40px;
-  height: 40px;
+  width: 100px;
+  height: 100px;
 }
 
 .weather-card, .forecast-card {
@@ -125,9 +130,13 @@ button[type="submit"],
 }
 
 #loading-spinner {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  z-index: 1000;
+  display: none;
+  justify-content: center;
+  align-items: center;
+  margin-top: 10px;
+}
+
+#loading-spinner img {
+  width: 50px;
+  height: 50px;
 }
